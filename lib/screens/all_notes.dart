@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/utils/theme.dart';
 import 'package:notably/widgets/drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AllNotesView extends StatefulWidget {
+
+  var user;
+
+  AllNotesView(this.user);
+
   @override
   _AllNotesViewState createState() => _AllNotesViewState();
 }
@@ -14,6 +20,19 @@ class _AllNotesViewState extends State<AllNotesView> {
   bool showHeaderText = false;
   bool showMoveUpArrow = false;
   ScrollController _scrollController;
+  int sortType = 0;
+  SharedPreferences local;
+
+  checkSortChoice()async {
+    local = await SharedPreferences.getInstance();
+    if(local.getInt('sort-pref') == null){
+
+    } else {
+      setState(() {
+        sortType = local.getInt('sort-pref');
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -122,9 +141,7 @@ class _AllNotesViewState extends State<AllNotesView> {
                     ]
                         : null,
                     elevation: 0,
-                    backgroundColor: Colors.transparent,
-                    shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: showHeaderText ? Color(0xff13547a) : Colors.transparent,
                     expandedHeight: 250,
                     onStretchTrigger: () {
                       return;
@@ -202,11 +219,14 @@ class _AllNotesViewState extends State<AllNotesView> {
                       ),
                     ),
                   ),
-                  SliverStaggeredGrid.countBuilder(
+                  sortType == 0 ? SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 4,
                     itemCount: 20,
                     itemBuilder: (BuildContext context, int index) => new Container(
-                        color: Colors.green,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15)
+                        ),
                         child: new Center(
                           child: new CircleAvatar(
                             backgroundColor: Colors.white,
@@ -215,9 +235,16 @@ class _AllNotesViewState extends State<AllNotesView> {
                         )),
                     staggeredTileBuilder: (int index) =>
                     new StaggeredTile.count(2, index.isEven ? 2 : 1),
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
-                  ),
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10,
+                  ) :
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+
+                          ]
+                        ),
+                      )
                 ],
               ),
             );

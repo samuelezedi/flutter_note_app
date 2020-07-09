@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:notably/utils/theme.dart';
 
 
 class AppDrawer extends StatelessWidget {
@@ -14,11 +15,8 @@ class AppDrawer extends StatelessWidget {
         elevation: 0,
         child: Container(
           decoration: BoxDecoration(
-              color: Color(0xff13547a),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15),
-                bottomRight: Radius.circular(15),
-              )
+              gradient: AppTheme.linearGradient,
+
           ),
           child: Column(
             children: <Widget>[
