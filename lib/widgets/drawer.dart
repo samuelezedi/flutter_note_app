@@ -92,10 +92,20 @@ class AppDrawer extends StatelessWidget {
                   height: 1,
                   color: AppTheme.color2,
                 ),
+                Expanded(
+                  child: Container()
+                ),
+                Divider(
+                  height: 1,
+                  color: AppTheme.color2,
+                ),
                 ListTile(
+                  onTap: (){
+                    this.onTap(2);
+                  },
                   leading:
-                  Icon(FeatherIcons.refreshCcw, color: Colors.grey[600]),
-                  title: Text('Categories',
+                  Icon(FeatherIcons.info, color: Colors.grey[600]),
+                  title: Text('About',
                       style: TextStyle(color: AppTheme.color1)),
                 ),
               ],

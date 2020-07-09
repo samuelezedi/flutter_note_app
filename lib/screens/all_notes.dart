@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/utils/theme.dart';
@@ -100,7 +101,8 @@ class _AllNotesViewState extends State<AllNotesView> {
             )
                 : Spacer(),
             FloatingActionButton(
-              child: Icon(Icons.add),
+              backgroundColor: AppTheme.color1,
+              child: Icon(Icons.add)
             )
           ],
         ),
