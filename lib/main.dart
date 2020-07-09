@@ -40,8 +40,11 @@ class _MainViewState extends State<MainView> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
+
           SliverAppBar(
             title: Text('All Notes'),
+            pinned: true,
+
             expandedHeight: 250,
             onStretchTrigger: (){
 
@@ -148,7 +151,60 @@ class _MainViewState extends State<MainView> {
                 ),
               ),
             ),
-          )
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                  Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: Text('123'),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),Padding(
+                padding: const EdgeInsets.all(28.0),
+                child: Text('123'),
+              ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Text('123'),
+                ),
+
+
+
+
+              ]
+            )
+          ),
         ],
       ),
     );
