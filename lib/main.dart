@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,7 +28,7 @@ class _MainViewState extends State<MainView> {
   final double appBarHeight = 66.0;
 
   bool showHeaderText = false;
-
+  bool showMoveUpArrow = false;
   ScrollController _scrollController;
 
   @override
@@ -36,17 +37,32 @@ class _MainViewState extends State<MainView> {
     super.initState();
     _scrollController = ScrollController()
       ..addListener(() {
-        print('here');
+        print(_scrollController.offset);
+
+        if(_scrollController.offset > 300){
+          if(showMoveUpArrow != true) {
+            setState(() {
+              showMoveUpArrow = true;
+            });
+          }
+        } else {
+
+            setState(() {
+              showMoveUpArrow = false;
+            });
+
+        }
+
         if (_isAppBarExpanded) {
           setState(() {
             showHeaderText = true;
-            print('setState is called with white');
+
           });
         } else {
           if (showHeaderText == true) {
             setState(() {
               showHeaderText = false;
-              print('setState is called with white');
+
             });
           }
         }
@@ -64,11 +80,53 @@ class _MainViewState extends State<MainView> {
 
     return Scaffold(
       backgroundColor: Color(0xff013db7),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            showMoveUpArrow ? FloatingActionButton(
+              onPressed: (){
+                _scrollController.animateTo(200.0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+              },
+              child: Icon(Icons.arrow_upward),
+            ): Spacer(),
+            FloatingActionButton(
+              child: Icon(Icons.add),
+            )
+          ],
+        ),
+      ),
       body: CustomScrollView(
         controller: _scrollController,
+        physics: BouncingScrollPhysics(),
         slivers: <Widget>[
           SliverAppBar(
             pinned: true,
+            leading: showHeaderText
+                ? IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    ),
+                  )
+                : null,
+            actions: showHeaderText
+                ? <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.more_vert,
+                        color: Colors.white,
+                      ),
+                    )
+                  ]
+                : null,
             elevation: 0,
             backgroundColor: Color(0xff013db7),
             shape:
@@ -85,7 +143,7 @@ class _MainViewState extends State<MainView> {
                 height: statusBarHeight + appBarHeight,
                 child: new Center(
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Container(
                       child: Column(
@@ -106,6 +164,36 @@ class _MainViewState extends State<MainView> {
                                     fontWeight: FontWeight.w800,
                                     fontSize: 15.0)),
                           ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.more_vert,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -117,91 +205,23 @@ class _MainViewState extends State<MainView> {
               ),
             ),
           ),
-          SliverGrid.count(
-            crossAxisCount: 2,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                margin: EdgeInsets.all(10),
-                child: Text('dsf'),
-              ),
-            ],
+          SliverStaggeredGrid.countBuilder(
+            crossAxisCount: 4,
+            itemCount: 8,
+            itemBuilder: (BuildContext context, int index) => new Container(
+                color: Colors.green,
+                child: new Center(
+                  child: new CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: new Text('$index'),
+                  ),
+                )),
+            staggeredTileBuilder: (int index) =>
+            new StaggeredTile.count(2, index.isEven ? 2 : 1),
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0,
           ),
+
         ],
       ),
     );
