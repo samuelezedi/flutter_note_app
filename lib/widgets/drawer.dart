@@ -15,29 +15,41 @@ class AppDrawer extends StatelessWidget {
         elevation: 0,
         child: Container(
           decoration: BoxDecoration(
-              gradient: AppTheme.linearGradient,
-
+              gradient: AppTheme.linearGradient2,
           ),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  IconButton(
-                    onPressed: () {
-
-                    },
-                    icon: Icon(Icons.settings),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              ListTile(
-                leading: Icon(FeatherIcons.book, color: Colors.white,),
+          padding: EdgeInsets.only(right: 10,top: 10, bottom: 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20)
               )
-            ],
+            ),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 25,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+
+                      },
+                      icon: Icon(Icons.settings,color: AppTheme.color1,),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                ListTile(
+                  leading: Icon(FeatherIcons.book, color: Colors.white,),
+                )
+              ],
+            ),
           ),
         ),
       ),

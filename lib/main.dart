@@ -26,8 +26,7 @@ class MyApp extends StatelessWidget {
 class AppBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Sele(),
+    return AllNotesView('sdf'
     );
   }
 }

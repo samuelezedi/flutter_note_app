@@ -13,15 +13,12 @@ class Sele extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SliderMenuContainer(
-          appBarColor: Colors.white,
+
           key: _key,
-          appBarPadding: const EdgeInsets.only(top: 20),
+          drawerIcon: Container(),
           sliderMenuOpenOffset: 250,
           appBarHeight: 60,
-          title: Text(
-            'sdf',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-          ),
+
           sliderMenuWidget: Container(
             child: Column(
               children: <Widget>[
