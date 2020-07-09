@@ -37,6 +37,7 @@ dependencies:
   fluttertoast: any
   share: ^0.6.3+6
   firebase_messaging: ^6.0.13
+  flutter_slider_drawer: ^1.0.1
 
 dev_dependencies:
   flutter_test:

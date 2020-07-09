@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/screens/all_notes.dart';
+import 'package:notably/screens/selected.dart';
 import 'package:notably/widgets/drawer.dart';
 
 void main() {
@@ -26,7 +27,7 @@ class AppBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: AllNotesView('asdf'),
+      child: Sele(),
     );
   }
 }
