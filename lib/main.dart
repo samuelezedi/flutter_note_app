@@ -39,30 +39,26 @@ class _MainViewState extends State<MainView> {
       ..addListener(() {
         print(_scrollController.offset);
 
-        if(_scrollController.offset > 300){
-          if(showMoveUpArrow != true) {
+        if (_scrollController.offset > 300) {
+          if (showMoveUpArrow != true) {
             setState(() {
               showMoveUpArrow = true;
             });
           }
         } else {
-
-            setState(() {
-              showMoveUpArrow = false;
-            });
-
+          setState(() {
+            showMoveUpArrow = false;
+          });
         }
 
         if (_isAppBarExpanded) {
           setState(() {
             showHeaderText = true;
-
           });
         } else {
           if (showHeaderText == true) {
             setState(() {
               showHeaderText = false;
-
             });
           }
         }
@@ -85,16 +81,27 @@ class _MainViewState extends State<MainView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            showMoveUpArrow ? FloatingActionButton(
-              onPressed: (){
-                _scrollController.animateTo(200.0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-              },
-              child: Icon(Icons.arrow_upward),
-            ): Spacer(),
+            showMoveUpArrow
+                ? FloatingActionButton(
+                    onPressed: () {
+                      _scrollController.animateTo(200.0,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeIn);
+                    },
+                    child: Icon(Icons.arrow_upward),
+                  )
+                : Spacer(),
             FloatingActionButton(
               child: Icon(Icons.add),
             )
           ],
+        ),
+      ),
+      drawer: Drawer(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.red
+          ),
         ),
       ),
       body: CustomScrollView(
@@ -207,7 +214,7 @@ class _MainViewState extends State<MainView> {
           ),
           SliverStaggeredGrid.countBuilder(
             crossAxisCount: 4,
-            itemCount: 8,
+            itemCount: 20,
             itemBuilder: (BuildContext context, int index) => new Container(
                 color: Colors.green,
                 child: new Center(
@@ -217,11 +224,10 @@ class _MainViewState extends State<MainView> {
                   ),
                 )),
             staggeredTileBuilder: (int index) =>
-            new StaggeredTile.count(2, index.isEven ? 2 : 1),
+                new StaggeredTile.count(2, index.isEven ? 2 : 1),
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0,
           ),
-
         ],
       ),
     );
