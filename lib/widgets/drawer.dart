@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 
 class AppDrawer extends StatelessWidget {
@@ -17,6 +18,27 @@ class AppDrawer extends StatelessWidget {
                 topRight: Radius.circular(15),
                 bottomRight: Radius.circular(15),
               )
+          ),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () {
+
+                    },
+                    icon: Icon(Icons.settings),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              ListTile(
+                leading: Icon(FeatherIcons.book, color: Colors.white,),
+              )
+            ],
           ),
         ),
       ),

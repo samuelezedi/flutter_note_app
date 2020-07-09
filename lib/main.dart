@@ -18,7 +18,17 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: AllNotesView());
+        home: AppBody());
   }
 }
+
+class AppBody extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: AllNotesView(),
+    );
+  }
+}
+
 

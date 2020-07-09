@@ -8,8 +8,8 @@ class AllNotesView extends StatefulWidget {
 }
 
 class _AllNotesViewState extends State<AllNotesView> {
-  final double appBarHeight = 66.0;
 
+  final double appBarHeight = 66.0;
   bool showHeaderText = false;
   bool showMoveUpArrow = false;
   ScrollController _scrollController;
@@ -54,6 +54,7 @@ class _AllNotesViewState extends State<AllNotesView> {
 
   @override
   Widget build(BuildContext context) {
+
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
