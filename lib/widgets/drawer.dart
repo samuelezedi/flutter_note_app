@@ -11,9 +11,10 @@ class AppDrawer extends StatelessWidget {
           canvasColor: Colors.transparent
       ),
       child: Drawer(
+        elevation: 0,
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.red,
+              color: Color(0xff13547a),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(15),
                 bottomRight: Radius.circular(15),
