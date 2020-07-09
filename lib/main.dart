@@ -26,7 +26,7 @@ class AppBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: AllNotesView(),
+      child: AllNotesView('asdf'),
     );
   }
 }

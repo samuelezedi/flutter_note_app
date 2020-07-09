@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/utils/theme.dart';
 import 'package:notably/widgets/drawer.dart';
+import 'package:notably/widgets/pop_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AllNotesView extends StatefulWidget {
@@ -132,12 +133,27 @@ class _AllNotesViewState extends State<AllNotesView> {
                           color: Colors.white,
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                        ),
-                      )
+                      PopMenu(
+                        iconColor: Colors.white,
+                        color: Colors.transparent,
+                        items: [
+                          PopupMenuItem<String>(
+                            value: "1",
+                            child: Text('Edit')
+                          ),
+                          PopupMenuItem<String>(
+                              value: "2",
+                              child: Text('Sort')
+                          ),
+                          PopupMenuItem<String>(
+                              value: "3",
+                              child: Text('View')
+                          ),
+                        ],
+                        onSelected: (value){
+                          print(value);
+                        },
+                      ),
                     ]
                         : null,
                     elevation: 0,
@@ -198,12 +214,26 @@ class _AllNotesViewState extends State<AllNotesView> {
                                                   color: Colors.white,
                                                 ),
                                               ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  Icons.more_vert,
-                                                  color: Colors.white,
-                                                ),
-                                              )
+                                              PopMenu(
+                                                iconColor: Colors.white,
+                                                color: Colors.transparent,
+                                                items: [
+                                                  PopupMenuItem<String>(
+                                                      value: "1",
+                                                      child: Text('Edit')
+                                                  ),
+                                                  PopupMenuItem<String>(
+                                                      value: "2",
+                                                      child: Text('Sort')
+                                                  ),
+                                                  PopupMenuItem<String>(
+                                                      value: "3",
+                                                      child: Text('View')
+                                                  ),
+                                                ],
+                                                onSelected: (value){
+                                                  print(value);
+                                                },)
                                             ],
                                           ),
                                         ],
