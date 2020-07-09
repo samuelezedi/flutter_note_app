@@ -113,7 +113,14 @@ class _AllNotesViewState extends State<AllNotesView> {
               drawerIcon: Container(),
               sliderMenuOpenOffset: 250,
               appBarHeight: 0,
-              sliderMenuWidget: AppDrawer(),
+              sliderMenuWidget: AppDrawer(
+                allNotesCount: 0,
+                allRecycleBinCount: 0,
+                allSharedCount: 0,
+                onTap: (value){
+                  print(value);
+                },
+              ),
               sliderMainWidget: Container(
                 decoration: BoxDecoration(
                   gradient: AppTheme.linearGradient
