@@ -377,9 +377,22 @@ class _AllNotesViewState extends State<AllNotesView> {
             },
             staggeredTileBuilder: (int index) {
               var data = snapshot.data.documents[index];
-//              var space = data['content'].toString().length > 200
+              var l = data['content'].toString().length;
+              var h = 1.0;
+              if(l < 30){
+                h = 1;
+              } else if(l> 30 && l < 50){
+                h = 1.0;
+              } else if(l > 50 && l < 200) {
+                h = 2.0;
+              } else if(l > 200 && l < 500) {
+                h = 2.5;
+              } else if(l > 500) {
+                h = 3;
+              }
+
               return StaggeredTile.count(
-                  2, data['content'].toString().length > 30 ? 2 : 1);
+                  2, h);
             },
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10,
