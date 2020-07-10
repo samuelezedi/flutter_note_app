@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
 class AppBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AllNotesView('sdf'
-    );
+    return NotesView('sdf', pageTitle: 'All Notes',selector: false,selectedNotes: [],allSnapshot: <String>[],);
   }
 }
 
