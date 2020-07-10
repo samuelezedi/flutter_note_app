@@ -184,6 +184,12 @@ class _CreateNoteState extends State<CreateNote> {
                       ),
                     ],
                   ),
+                  Container(
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300]
+                    )
+                  ),
                   Wrap(
                     children: <Widget>[
                       Padding(

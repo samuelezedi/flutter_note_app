@@ -123,6 +123,7 @@ class _AllNotesViewState extends State<AllNotesView> {
           sliderMenuOpenOffset: 250,
           appBarHeight: 0,
           sliderMenuWidget: AppDrawer(
+            currentPage: 0,
             allNotesCount: 0,
             allRecycleBinCount: 0,
             allSharedCount: 0,
@@ -220,7 +221,7 @@ class _AllNotesViewState extends State<AllNotesView> {
                                       ),
                                       Container(
                                         child: new Text(
-                                            "${noteCount.toString()} Count" +
+                                            "${noteCount.toString()} Note" +
                                                 (noteCount > 1 ? "s" : ""),
                                             style: const TextStyle(
                                                 color: Colors.white,
@@ -325,6 +326,9 @@ class _AllNotesViewState extends State<AllNotesView> {
                         created: data['timestamp'],
                       )));
                 },
+                onLongPress: (){
+                  //TODO should take you to selected page
+                },
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
@@ -339,6 +343,7 @@ class _AllNotesViewState extends State<AllNotesView> {
                             children: <Widget>[
                               Text(
                                 data['title'],
+                                textAlign: TextAlign.start,
                                 style: TextStyle(
                                     fontSize: 19, fontWeight: FontWeight.bold),
                               ),
