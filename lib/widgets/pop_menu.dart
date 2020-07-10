@@ -34,7 +34,7 @@ class PopMenu extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context) => this.items,
         onSelected: (value) {
-          return value;
+          this.onSelected(value);
         },
     );
   }

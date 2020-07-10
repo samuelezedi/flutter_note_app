@@ -7,6 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/components/page_transition.dart';
 import 'package:notably/screens/create.dart';
 import 'package:notably/utils/theme.dart';
+import 'package:notably/widgets/dialogs.dart';
 import 'package:notably/widgets/drawer.dart';
 import 'package:notably/widgets/pop_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -140,7 +141,7 @@ class _AllNotesViewState extends State<AllNotesView> {
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  var noteCount = snapshot.data.documents.length;
+                  var noteCount = snapshot.hasData ? snapshot.data.documents.length: 0;
                   return CustomScrollView(
                     controller: _scrollController,
                     physics: BouncingScrollPhysics(),
@@ -186,7 +187,14 @@ class _AllNotesViewState extends State<AllNotesView> {
                                         value: "3", child: Text('View')),
                                   ],
                                   onSelected: (value) {
-                                    print(value);
+
+                                    if(value == "2"){
+                                      Dialogs.sort(context: context, type: DialogType.sort);
+                                    }
+
+                                    if(value == "3"){
+                                      Dialogs.sort(context: context, type: DialogType.view);
+                                    }
                                   },
                                 ),
                               ]
@@ -276,7 +284,14 @@ class _AllNotesViewState extends State<AllNotesView> {
                                                       child: Text('View')),
                                                 ],
                                                 onSelected: (value) {
-                                                  print(value);
+
+                                                  if(value == "2"){
+                                                    Dialogs.sort(context: context, type: DialogType.sort);
+                                                  }
+
+                                                  if(value == "3"){
+                                                    Dialogs.sort(context: context, type: DialogType.view);
+                                                  }
                                                 },
                                               )
                                             ],
