@@ -100,7 +100,14 @@ class _AllNotesViewState extends State<AllNotesView> {
             FloatingActionButton(
                 onPressed: () {
                   Navigator.push(
-                      context, PageTransition.scaleRoute(page: CreateNote(widget.user, "1",noteTitle: '',noteContent: '',)));
+                      context,
+                      PageTransition.scaleRoute(
+                          page: CreateNote(
+                        widget.user,
+                        "1",
+                        noteTitle: '',
+                        noteContent: '',
+                      )));
                 },
                 backgroundColor: AppTheme.color1,
                 child: Icon(Icons.add))
@@ -128,7 +135,6 @@ class _AllNotesViewState extends State<AllNotesView> {
                 stream: Firestore.instance
                     .collection('notes')
                     .where('userId', isEqualTo: widget.user)
-                    .orderBy('favourite', descending: true)
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -299,19 +305,35 @@ class _AllNotesViewState extends State<AllNotesView> {
         if (sortType == 0) {
           return SliverStaggeredGrid.countBuilder(
             crossAxisCount: 4,
-            itemCount: 20,
-            itemBuilder: (BuildContext context, int index) => new Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15)),
-                child: new Center(
-                  child: new CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: new Text('$index'),
-                  ),
-                )),
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (BuildContext context, int index) {
+              var data = snapshot.data.documents[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition.scaleRoute(
+                          page: CreateNote(
+                        widget.user,
+                        data.documentID,
+                        noteContent: data['content'],
+                        noteTitle: data['title'],
+                      )));
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Column(
+                      children: <Widget>[Text(data['title'])],
+                    )),
+              );
+            },
             staggeredTileBuilder: (int index) {
-              return StaggeredTile.count(2, index.isEven ? 2 : 1);
+              var data = snapshot.data.documents[index];
+//              var space = data['content'].toString().length > 200
+              return StaggeredTile.count(
+                  2, data['content'].toString().length > 30 ? 2 : 1);
             },
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10,
@@ -324,19 +346,23 @@ class _AllNotesViewState extends State<AllNotesView> {
       } else {
         return SliverToBoxAdapter(
           child: Container(
-            child: Center(child: Text('You have no note yet',style: TextStyle(color: Colors.white,fontSize: 20),)),
+            child: Center(
+                child: Text(
+              'You have no note yet',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            )),
           ),
         );
       }
     } else {
       return SliverToBoxAdapter(
           child: Column(
-            children: <Widget>[
-              Center(
-        child: CircularProgressIndicator(),
-      ),
-            ],
-          ));
+        children: <Widget>[
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      ));
     }
   }
 }

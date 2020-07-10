@@ -95,7 +95,6 @@ class _CreateNoteState extends State<CreateNote> {
         Flash().show(context, 2, 'Saved', Colors.black54, 15, null,null);
       });
     }
-    Navigator.pop(context);
   }
 
   @override
