@@ -25,7 +25,7 @@ class _CreateNoteState extends State<CreateNote> {
   String user;
   String type;
   BuildContext mContext;
-  bool notSave = true;
+  bool notSave = false;
 
   @override
   void initState() {
@@ -156,59 +156,68 @@ class _CreateNoteState extends State<CreateNote> {
         ),
         body: Builder(builder: (context) {
           mContext = context;
-          return Container(
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  onChanged: (input) {
-                    setState(() {
-                      noteTitle = input;
-                      notSave = false;
-                    });
-                  },
-                  initialValue: noteTitle,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                  decoration: InputDecoration(
-                    hintText: 'Enter Title',
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                  ),
-                ),
-                Wrap(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Notes:',
-                        style: TextStyle(
-                          fontSize: 17,
+          return SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Wrap(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          onChanged: (input) {
+                            setState(() {
+                              noteTitle = input;
+                              notSave = true;
+                            });
+                          },
+                          initialValue: noteTitle,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                          decoration: InputDecoration(
+                            hintText: 'Enter Title',
+                            enabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                          ),
                         ),
                       ),
-                    ),
-                    TextFormField(
-                      onChanged: (input) {
-                        setState(() {
-                          noteContent = input;
-                          notSave = false;
-                        });
-                      },
-                      initialValue: noteContent,
-                      minLines: 1,
-                      maxLines: 300,
-                      style: TextStyle(fontSize: 17),
-                      decoration: InputDecoration(
-                        hintText: 'Enter notes',
-                        enabledBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        focusedBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
+                    ],
+                  ),
+                  Wrap(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Notes:',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                      TextFormField(
+                        onChanged: (input) {
+                          setState(() {
+                            noteContent = input;
+                            notSave = true;
+                          });
+                        },
+                        initialValue: noteContent,
+                        minLines: 1,
+                        maxLines: 300,
+                        style: TextStyle(fontSize: 17),
+                        decoration: InputDecoration(
+                          hintText: 'Enter notes',
+                          enabledBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          focusedBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           );
         }));

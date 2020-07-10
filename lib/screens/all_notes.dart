@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
@@ -138,6 +139,7 @@ class _AllNotesViewState extends State<AllNotesView> {
                     .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
+                  var noteCount = snapshot.data.documents.length;
                   return CustomScrollView(
                     controller: _scrollController,
                     physics: BouncingScrollPhysics(),
@@ -217,7 +219,9 @@ class _AllNotesViewState extends State<AllNotesView> {
                                                 fontSize: 28.0)),
                                       ),
                                       Container(
-                                        child: new Text("note count",
+                                        child: new Text(
+                                            "${noteCount.toString()} Count" +
+                                                (noteCount > 1 ? "s" : ""),
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w800,
@@ -322,11 +326,52 @@ class _AllNotesViewState extends State<AllNotesView> {
                       )));
                 },
                 child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15)),
-                    child: Column(
-                      children: <Widget>[Text(data['title'])],
+                    child: Stack(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                data['title'],
+                                style: TextStyle(
+                                    fontSize: 19, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                data['content'],
+                                overflow: TextOverflow.fade,
+                              ))
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                            visible: false,
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                width: 25,
+                                height: 25,
+                                decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: CircleAvatar(
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 12,
+                                  ),
+                                ),
+                              ),
+                            ))
+                      ],
                     )),
               );
             },
