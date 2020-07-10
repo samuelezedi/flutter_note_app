@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
         title: 'Notablee',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          fontFamily: 'Rubik',
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
