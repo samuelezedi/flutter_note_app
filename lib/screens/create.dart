@@ -10,7 +10,9 @@ class CreateNote extends StatefulWidget {
   String noteContent = '';
   String user;
   String type;
-  CreateNote(this.user, this.type, {this.noteTitle, this.noteContent});
+  Timestamp created;
+  Timestamp updated;
+  CreateNote(this.user, this.type, {this.noteTitle, this.noteContent, this.created, this.updated});
   @override
   _CreateNoteState createState() => _CreateNoteState();
 }
@@ -53,6 +55,8 @@ class _CreateNoteState extends State<CreateNote> {
         title: noteTitle,
         content: noteContent,
         updated: Timestamp.now(),
+        timestamp: widget.created,
+        userId: widget.user
       );
       //means old note
       Firestore.instance.collection('notes')
@@ -85,6 +89,8 @@ class _CreateNoteState extends State<CreateNote> {
         title: noteTitle,
         content: noteContent,
         updated: Timestamp.now(),
+          timestamp: widget.created,
+          userId: widget.user
       );
       //means old note
       Firestore.instance.collection('notes')

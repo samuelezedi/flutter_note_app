@@ -318,6 +318,7 @@ class _AllNotesViewState extends State<AllNotesView> {
                         data.documentID,
                         noteContent: data['content'],
                         noteTitle: data['title'],
+                        created: data['timestamp'],
                       )));
                 },
                 child: Container(
