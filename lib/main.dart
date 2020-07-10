@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/screens/all_notes.dart';
 import 'package:notably/screens/selected.dart';
+import 'package:notably/utils/theme.dart';
 import 'package:notably/widgets/drawer.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Rubik',
-          primarySwatch: Colors.blue,
+          primarySwatch: MaterialColor(AppTheme.colorCode1, AppTheme.colorCodes),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AppBody());

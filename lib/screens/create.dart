@@ -15,6 +15,9 @@ class _CreateNoteState extends State<CreateNote> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
+          onPressed: (){
+            Navigator.pop(context);
+          },
           icon: Icon(Icons.arrow_back_ios,color: Colors.black54,),
         ),
         actions: <Widget>[
@@ -31,13 +34,53 @@ class _CreateNoteState extends State<CreateNote> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(
+                onChanged: (input){
 
+                },
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Enter Title',
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none
+                  ),
                 ),
               ),
-              TextFormField(
+              Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Notes:',style: TextStyle(fontSize: 17,
+                    ),),
+                  ),
+                  TextFormField(
+                    onChanged: (input){
+                      setState(() {
 
-              ),
+                      });
+                    },
+                    minLines: 1,
+                    maxLines: 300,
+                    style: TextStyle(
+                        fontSize: 17
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Enter notes',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         )

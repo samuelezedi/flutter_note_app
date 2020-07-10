@@ -1,0 +1,77 @@
+{
+"project_info": {
+"project_number": "230115219136",
+"firebase_url": "https://notably-2d762.firebaseio.com",
+"project_id": "notably-2d762",
+"storage_bucket": "notably-2d762.appspot.com"
+},
+"client": [
+{
+"client_info": {
+"mobilesdk_app_id": "1:230115219136:android:8413216151624ef8bf7f25",
+"android_client_info": {
+"package_name": "net.cubiclab.natably"
+}
+},
+"oauth_client": [
+{
+"client_id": "230115219136-soueajnmpavenss50o96ga680i3v6eci.apps.googleusercontent.com",
+"client_type": 1,
+"android_info": {
+"package_name": "net.cubiclab.natably",
+"certificate_hash": "12de732c417657149d634f4198f6ba6c7144977a"
+}
+},
+{
+"client_id": "230115219136-banuladrb8341oap1d5don067m13kqng.apps.googleusercontent.com",
+"client_type": 3
+}
+],
+"api_key": [
+{
+"current_key": "AIzaSyDIzvF-1jQa1YditogfvqM6vVrHDCZqWrE"
+}
+],
+"services": {
+"appinvite_service": {
+"other_platform_oauth_client": [
+{
+"client_id": "230115219136-banuladrb8341oap1d5don067m13kqng.apps.googleusercontent.com",
+"client_type": 3
+}
+]
+}
+}
+},
+{
+"client_info": {
+"mobilesdk_app_id": "1:230115219136:android:66721c72c63c1c68bf7f25",
+"android_client_info": {
+"package_name": "net.cubiclab.notably"
+}
+},
+"oauth_client": [
+{
+"client_id": "230115219136-banuladrb8341oap1d5don067m13kqng.apps.googleusercontent.com",
+"client_type": 3
+}
+],
+"api_key": [
+{
+"current_key": "AIzaSyDIzvF-1jQa1YditogfvqM6vVrHDCZqWrE"
+}
+],
+"services": {
+"appinvite_service": {
+"other_platform_oauth_client": [
+{
+"client_id": "230115219136-banuladrb8341oap1d5don067m13kqng.apps.googleusercontent.com",
+"client_type": 3
+}
+]
+}
+}
+}
+],
+"configuration_version": "1"
+}
