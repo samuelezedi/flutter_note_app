@@ -100,7 +100,7 @@ class _AllNotesViewState extends State<AllNotesView> {
             FloatingActionButton(
                 onPressed: () {
                   Navigator.push(
-                      context, PageTransition.scaleRoute(page: CreateNote()));
+                      context, PageTransition.scaleRoute(page: CreateNote(widget.user, "1",noteTitle: '',noteContent: '',)));
                 },
                 backgroundColor: AppTheme.color1,
                 child: Icon(Icons.add))
