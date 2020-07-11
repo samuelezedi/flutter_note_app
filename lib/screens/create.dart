@@ -43,6 +43,9 @@ class _CreateNoteState extends State<CreateNote> {
   saveNote() {
     if (notSave) {
       if (prevNoteContent != noteContent || prevNoteTitle != noteTitle) {
+        setState(() {
+          notSave = false;
+        });
         if (this.type == "1") {
           //means new note
           Notes notes = Notes(
@@ -73,9 +76,7 @@ class _CreateNoteState extends State<CreateNote> {
               .document(this.type)
               .updateData(notes.toMap())
               .then((value) {
-            setState(() {
-              notSave = false;
-            });
+
             Flash().show(context, 2, 'Saved', Colors.black54, 15, null, null);
           });
         }

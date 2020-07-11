@@ -3,12 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/components/page_transition.dart';
 import 'package:notably/screens/create.dart';
 import 'package:notably/utils/theme.dart';
 import 'package:notably/utils/toast.dart';
-import 'package:notably/utils/utility.dart';
 import 'package:notably/widgets/dialogs.dart';
 import 'package:notably/widgets/drawer.dart';
 import 'package:notably/widgets/listview.dart';
@@ -175,15 +173,13 @@ class _NotesViewState extends State<NotesView> {
                     var batch = db.batch();
                     widget.selectedNotes.map((value) {
                           widget.selectedNotes.remove(value);
-                            batch.delete(Firestore.instance.collection('notes')
+                            batch.delete(db.collection('notes')
                                 .document(value));
 
                     }).toList();
 
                     batch.commit().then((value) {
-                      setState(() {
-                        widget.selector = false;
-                      });
+
                     });
 
                   }
@@ -314,7 +310,7 @@ class _NotesViewState extends State<NotesView> {
                                                 .toString() +
                                             ") "
                                         : "") +
-                                    widget.pageTitle)
+                                (widget.selector ? "selected" : "All Notes"))
                                 : null,
                             centerTitle: true,
                             background: Container(
@@ -345,7 +341,7 @@ class _NotesViewState extends State<NotesView> {
                                                               .toString() +
                                                           ") "
                                                       : "") +
-                                                  widget.pageTitle,
+                                                  (widget.selector ? "selected" : "All Notes"),
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 28.0)),
