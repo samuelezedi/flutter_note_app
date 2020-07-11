@@ -38,6 +38,7 @@ dependencies:
   share: ^0.6.3+6
   firebase_messaging: ^6.0.13
   flutter_slider_drawer: ^1.0.1
+  time_formatter: ^1.0.0
 
 dev_dependencies:
   flutter_test:

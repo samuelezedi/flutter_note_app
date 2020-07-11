@@ -6,10 +6,12 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notably/components/page_transition.dart';
 import 'package:notably/screens/create.dart';
-import 'package:notably/screens/selected.dart';
 import 'package:notably/utils/theme.dart';
+import 'package:notably/utils/toast.dart';
+import 'package:notably/utils/utility.dart';
 import 'package:notably/widgets/dialogs.dart';
 import 'package:notably/widgets/drawer.dart';
+import 'package:notably/widgets/listview.dart';
 import 'package:notably/widgets/pop_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +22,8 @@ class NotesView extends StatefulWidget {
   List<String> allSnapshot;
   List<String> selectedNotes = <String>[];
 
-  NotesView(this.user, {this.pageTitle, this.selector, this.selectedNotes, this.allSnapshot});
+  NotesView(this.user,
+      {this.pageTitle, this.selector, this.selectedNotes, this.allSnapshot});
 
   @override
   _NotesViewState createState() => _NotesViewState();
@@ -34,11 +37,33 @@ class _NotesViewState extends State<NotesView> {
   bool showMoveUpArrow = false;
   ScrollController _scrollController;
   int sortType = 0;
+  int userSortOrder = 0;
   SharedPreferences local;
   bool drawerState = false;
   GlobalKey<SliderMenuContainerState> _key =
       new GlobalKey<SliderMenuContainerState>();
   List<String> selectedNotes = <String>[];
+  var userViewSetting = 1;
+
+  getUserSettings() async {
+    local = await SharedPreferences.getInstance();
+    if (local.getInt('user-sort-settings') != null) {
+      setState(() {
+        sortType = local.getInt('user-sort-settings');
+      });
+    }
+    if (local.getInt('user-sort-order') != null) {
+      setState(() {
+        sortType = local.getInt('user-sort-order');
+      });
+    }
+    if (local.getInt('user-view-settings') != null) {
+      setState(() {
+        userViewSetting = local.getInt('user-view-settings');
+      });
+    }
+  }
+
   checkSortChoice() async {
     local = await SharedPreferences.getInstance();
     if (local.getInt('sort-pref') == null) {
@@ -50,18 +75,19 @@ class _NotesViewState extends State<NotesView> {
   }
 
   getStream() {
+
     return Firestore.instance
         .collection('notes')
         .where('userId', isEqualTo: widget.user)
-        .orderBy('timestamp', descending: true)
+        .orderBy((sortType == 0 ? 'title' : sortType == 1 ? 'timestamp' : 'updated'), descending: (userSortOrder == 1))
         .snapshots();
-
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getUserSettings();
     setState(() {
       this.pageTitle = widget.pageTitle;
       this.selectedNotes = widget.selectedNotes;
@@ -103,8 +129,8 @@ class _NotesViewState extends State<NotesView> {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return WillPopScope(
-      onWillPop: ( ){
-        if(widget.selector){
+      onWillPop: () {
+        if (widget.selector) {
           setState(() {
             widget.selector = false;
             widget.selectedNotes = <String>[];
@@ -113,7 +139,7 @@ class _NotesViewState extends State<NotesView> {
         return;
       },
       child: Scaffold(
-        backgroundColor: Color(0xff13547A),
+        backgroundColor: AppTheme.color1,
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Row(
@@ -129,7 +155,7 @@ class _NotesViewState extends State<NotesView> {
                       child: Icon(Icons.arrow_upward),
                     )
                   : Spacer(),
-              FloatingActionButton(
+              widget.selector ? Container() : FloatingActionButton(
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -146,6 +172,39 @@ class _NotesViewState extends State<NotesView> {
             ],
           ),
         ),
+        bottomNavigationBar: widget.selector
+            ? BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                unselectedItemColor: AppTheme.color1,
+                onTap: (int value) {
+                  if(value == 3){
+                    Flash().show(context,2, 'Deleting', Colors.black54, 16, Colors.white, null);
+                    for(var i = 0;i<widget.selectedNotes.length;i++){
+
+                      Firestore.instance.collection('notes')
+                          .document(widget.selectedNotes[i])
+                          .delete();
+                      print(widget.selectedNotes);
+
+                      widget.selectedNotes.remove(widget.selectedNotes[i]);
+                    }
+                    setState(() {
+                      widget.selector = false;
+                    });
+                  }
+                },
+                items: [
+                    BottomNavigationBarItem(
+                        title: Text('Share'), icon: Icon(FeatherIcons.share2)),
+                    BottomNavigationBarItem(
+                        title: Text('Move'),
+                        icon: Icon(FeatherIcons.arrowRight)),
+                    BottomNavigationBarItem(
+                        title: Text('Lock'), icon: Icon(FeatherIcons.lock)),
+                    BottomNavigationBarItem(
+                        title: Text('Delete'), icon: Icon(FeatherIcons.trash)),
+                  ])
+            : null,
         body: Builder(builder: (context) {
           return SliderMenuContainer(
             key: _key,
@@ -167,9 +226,8 @@ class _NotesViewState extends State<NotesView> {
               child: StreamBuilder(
                   stream: getStream(),
                   builder: (context, snapshot) {
-
-                      noteCount =
-                      snapshot.hasData ? snapshot.data.documents.length : 0;
+                    noteCount =
+                        snapshot.hasData ? snapshot.data.documents.length : 0;
 
                     return CustomScrollView(
                       controller: _scrollController,
@@ -179,63 +237,67 @@ class _NotesViewState extends State<NotesView> {
                           pinned: true,
                           automaticallyImplyLeading: false,
                           leading: showHeaderText
-                              ?  widget.selector ? showAllIconButtonForTopBar(context) : IconButton(
-                                  onPressed: () {
-                                    if (drawerState) {
-                                      _key.currentState.closeDrawer();
-                                    } else {
-                                      _key.currentState.openDrawer();
-                                    }
-                                    setState(() {
-                                      drawerState = !drawerState;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    drawerState ? Icons.close : Icons.menu,
-                                    color: Colors.white,
-                                  ),
-                                )
+                              ? widget.selector
+                                  ? showAllIconButtonForTopBar(context)
+                                  : IconButton(
+                                      onPressed: () {
+                                        if (drawerState) {
+                                          _key.currentState.closeDrawer();
+                                        } else {
+                                          _key.currentState.openDrawer();
+                                        }
+                                        setState(() {
+                                          drawerState = !drawerState;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        drawerState ? Icons.close : Icons.menu,
+                                        color: Colors.white,
+                                      ),
+                                    )
                               : null,
                           actions: showHeaderText
-                              ? widget.selector ? [] : <Widget>[
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  PopMenu(
-                                    iconColor: Colors.white,
-                                    color: Colors.transparent,
-                                    items: [
-                                      PopupMenuItem<String>(
-                                          value: "1", child: Text('Edit')),
-                                      PopupMenuItem<String>(
-                                          value: "2", child: Text('Sort')),
-                                      PopupMenuItem<String>(
-                                          value: "3", child: Text('View')),
-                                    ],
-                                    onSelected: (value) {
-                                      if (value == "1") {
-                                        setState(() {
-                                          widget.selector = true;
-                                        });
-                                      }
+                              ? widget.selector
+                                  ? []
+                                  : <Widget>[
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.search,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      PopMenu(
+                                        iconColor: Colors.white,
+                                        color: Colors.transparent,
+                                        items: [
+                                          PopupMenuItem<String>(
+                                              value: "1", child: Text('Edit')),
+                                          PopupMenuItem<String>(
+                                              value: "2", child: Text('Sort')),
+                                          PopupMenuItem<String>(
+                                              value: "3", child: Text('View')),
+                                        ],
+                                        onSelected: (value) {
+                                          if (value == "1") {
+                                            setState(() {
+                                              widget.selector = true;
+                                            });
+                                          }
 
-                                      if (value == "2") {
-                                        Dialogs.sort(
-                                            context: context,
-                                            type: DialogType.sort);
-                                      }
+                                          if (value == "2") {
+                                            Dialogs.show(
+                                                context: context,
+                                                type: DialogType.sort);
+                                          }
 
-                                      if (value == "3") {
-                                        Dialogs.sort(
-                                            context: context,
-                                            type: DialogType.view);
-                                      }
-                                    },
-                                  ),
-                                ]
+                                          if (value == "3") {
+                                            Dialogs.show(
+                                                context: context,
+                                                type: DialogType.view);
+                                          }
+                                        },
+                                      ),
+                                    ]
                               : null,
                           elevation: 0,
                           backgroundColor: showHeaderText
@@ -261,7 +323,8 @@ class _NotesViewState extends State<NotesView> {
                                 : null,
                             centerTitle: true,
                             background: Container(
-                              padding: new EdgeInsets.only(top: statusBarHeight),
+                              padding:
+                                  new EdgeInsets.only(top: statusBarHeight),
                               height: statusBarHeight + appBarHeight,
                               child: new Center(
                                   child: Column(
@@ -269,7 +332,8 @@ class _NotesViewState extends State<NotesView> {
                                 children: <Widget>[
                                   Container(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
                                           child: new Text(
@@ -328,16 +392,14 @@ class _NotesViewState extends State<NotesView> {
 
   Widget showAllIconButtonForTopBar(BuildContext context) {
     return IconButton(
-      onPressed: (){
+      onPressed: () {
         setState(() {
-
           print(widget.selectedNotes.length);
-          if(noteCount == widget.selectedNotes.length){
+          if (noteCount == widget.selectedNotes.length) {
             widget.selectedNotes = [];
           } else {
-
             widget.allSnapshot.map((value) {
-              if(!widget.selectedNotes.contains(value)){
+              if (!widget.selectedNotes.contains(value)) {
                 widget.selectedNotes.add(value);
               }
             }).toList();
@@ -345,32 +407,31 @@ class _NotesViewState extends State<NotesView> {
         });
       },
       icon: Icon(
-        noteCount != widget.selectedNotes.length ?
-        Icons.radio_button_unchecked
-            :
-        Icons.radio_button_checked,
-        color: Colors.white,size: 25,),
+        noteCount != widget.selectedNotes.length
+            ? Icons.radio_button_unchecked
+            : Icons.radio_button_checked,
+        color: Colors.white,
+        size: 25,
+      ),
     );
   }
 
   Widget lowerActionButtons(BuildContext context) {
-    if(widget.selector) {
+    if (widget.selector) {
       return Padding(
-        padding: const EdgeInsets.only(left: 10.0,bottom: 10),
+        padding: const EdgeInsets.only(left: 10.0, bottom: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             IconButton(
-              onPressed: (){
+              onPressed: () {
                 setState(() {
-
-                 print(widget.selectedNotes.length);
-                  if(noteCount == widget.selectedNotes.length){
+                  print(widget.selectedNotes.length);
+                  if (noteCount == widget.selectedNotes.length) {
                     widget.selectedNotes = [];
                   } else {
-
                     widget.allSnapshot.map((value) {
-                      if(!widget.selectedNotes.contains(value)){
+                      if (!widget.selectedNotes.contains(value)) {
                         widget.selectedNotes.add(value);
                       }
                     }).toList();
@@ -378,13 +439,17 @@ class _NotesViewState extends State<NotesView> {
                 });
               },
               icon: Icon(
-                noteCount != widget.selectedNotes.length ?
-                Icons.radio_button_unchecked
-                    :
-                    Icons.radio_button_checked,
-                color: Colors.white,size: 25,),
+                noteCount != widget.selectedNotes.length
+                    ? Icons.radio_button_unchecked
+                    : Icons.radio_button_checked,
+                color: Colors.white,
+                size: 25,
+              ),
             ),
-            Text('All',style: TextStyle(color: Colors.white,fontSize: 20),)
+            Text(
+              'All',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            )
           ],
         ),
       );
@@ -432,11 +497,32 @@ class _NotesViewState extends State<NotesView> {
                   }
 
                   if (value == "2") {
-                    Dialogs.sort(context: context, type: DialogType.sort);
+                    Dialogs.show(
+                        context: context,
+                        type: DialogType.sort,
+                      sortValue: {'type' : sortType, 'order' : userSortOrder},
+                      onTap: (data) {
+
+                          saveUserData(data);
+                          return;
+                      },
+                      onChanged: (data) {
+
+                      }
+                    );
                   }
 
                   if (value == "3") {
-                    Dialogs.sort(context: context, type: DialogType.view);
+                    Dialogs.show(
+                      onTap: (data) {
+
+                        saveUserData(data);
+                        return;
+                      },
+                        context: context,
+                        type: DialogType.view,
+                        viewtype: userViewSetting,
+                    );
                   }
                 },
               )
@@ -447,157 +533,73 @@ class _NotesViewState extends State<NotesView> {
     }
   }
 
-  _addView(context, snapshot) {
-    if (snapshot.hasData) {
-      if (snapshot.data.documents.length > 0) {
-        if (sortType == 0) {
-          return SliverStaggeredGrid.countBuilder(
-            crossAxisCount: 4,
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (BuildContext context, int index) {
-              var data = snapshot.data.documents[index];
-              widget.allSnapshot.add(data.documentID);
-              return GestureDetector(
-                onTap: () {
-                  if (widget.selector) {
-                    if (widget.selectedNotes.contains(data.documentID)) {
-                      setState(() {
-                        widget.selectedNotes.remove(data.documentID);
-                      });
-                    } else {
-                      setState(() {
-                        widget.selectedNotes.add(data.documentID);
-                      });
-                    }
-                  } else {
-                    Navigator.push(context, PageTransition.scaleRoute(page: CreateNote(
-                      widget.user,
-                      data.documentID,
-                      noteTitle: data['title'],
-                      noteContent: data['content'],
-                      created: data['timestamp'],
-                      updated: data['updated'],
-                    )));
-                  }
-                },
-                onLongPress: () {
-                  //TODO should take you to selected page
-                  if (widget.selector) {
-                  } else {
-                    setState(() {
-                      widget.selector = true;
-                      widget.selectedNotes.add(data.documentID);
-                    });
-                  }
-                },
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Stack(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              widget.selector
-                                  ? SizedBox(
-                                      height: 25,
-                                    )
-                                  : Container(),
-                              Text(
-                                data['title'],
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: 19, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Expanded(
-                                  child: Text(
-                                data['content'],
-                                overflow: TextOverflow.fade,
-                              ))
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                            visible: widget.selector,
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: Container(
-                                width: 25,
-                                height: 25,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(
-                                        color: AppTheme.color1, width: 2)),
-                                child: widget.selectedNotes
-                                        .contains(data.documentID)
-                                    ? CircleAvatar(
-                                        backgroundColor: AppTheme.color1,
-                                        child: Icon(
-                                          Icons.check,
-                                          color: Colors.white,
-                                          size: 15,
-                                        ),
-                                      )
-                                    : CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                      ),
-                              ),
-                            ))
-                      ],
-                    )),
-              );
-            },
-            staggeredTileBuilder: (int index) {
-              var data = snapshot.data.documents[index];
-              var l = data['content'].toString().length;
-              var h = 1.0;
-              if (l < 50) {
-                h = 1.5;
-              } else if (l > 50 && l < 200) {
-                h = 2.0;
-              } else if (l > 200 && l < 500) {
-                h = 2.5;
-              } else if (l > 500) {
-                h = 3;
-              }
-
-              return StaggeredTile.count(2, h);
-            },
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-          );
-        } else {
-          return SliverList(
-            delegate: SliverChildListDelegate([]),
-          );
-        }
-      } else {
-        return SliverToBoxAdapter(
-          child: Container(
-            child: Center(
-                child: Text(
-              'You have no note yet',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            )),
-          ),
-        );
+  saveUserData(data)async {
+    data.forEach((k,v){
+      if(k.toString() == 'type'){
+        setState(() {
+          sortType = v;
+          local.setInt('user-sort-settings', v);
+        });
       }
-    } else {
-      return SliverToBoxAdapter(
-          child: Column(
-        children: <Widget>[
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      ));
-    }
+
+      if(k.toString() == 'order'){
+        setState(() {
+          userSortOrder= v;
+          local.setInt('user-sort-order', v);
+        });
+      }
+      if(k.toString() == 'view'){
+        setState(() {
+          userViewSetting= v;
+          local.setInt('user-view-settings', v);
+        });
+      }
+    });
+  }
+
+  _addView(context, snapshot) {
+    return ListViewBuilder(
+      context: context,
+      snapshot: snapshot,
+      selectedNotes: widget.selectedNotes,
+      selector: widget.selector,
+      allSnapshot: widget.allSnapshot,
+      userViewSetting: this.userViewSetting,
+      onLongPress: (data, selector) {
+        if (selector) {
+        } else {
+          setState(() {
+            widget.selector = true;
+            widget.selectedNotes.add(data.documentID);
+          });
+        }
+      },
+      onTap: (data, selector) {
+        if (selector) {
+
+          if (widget.selectedNotes.contains(data.documentID)) {
+            setState(() {
+              widget.selectedNotes.remove(data.documentID);
+            });
+          } else {
+            setState(() {
+              widget.selectedNotes.add(data.documentID);
+            });
+          }
+        } else {
+          Navigator.push(
+              context,
+              PageTransition.scaleRoute(
+                  page: CreateNote(
+                widget.user,
+                data.documentID,
+                noteTitle: data['title'],
+                noteContent: data['content'],
+                created: data['timestamp'],
+                updated: data['updated'],
+              )));
+        }
+      },
+    );
   }
 }
