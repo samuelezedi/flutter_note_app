@@ -54,7 +54,7 @@ class _NotesViewState extends State<NotesView> {
     }
     if (local.getInt('user-sort-order') != null) {
       setState(() {
-        sortType = local.getInt('user-sort-order');
+        userSortOrder = local.getInt('user-sort-order');
       });
     }
     if (local.getInt('user-view-settings') != null) {
@@ -64,15 +64,7 @@ class _NotesViewState extends State<NotesView> {
     }
   }
 
-  checkSortChoice() async {
-    local = await SharedPreferences.getInstance();
-    if (local.getInt('sort-pref') == null) {
-    } else {
-      setState(() {
-        sortType = local.getInt('sort-pref');
-      });
-    }
-  }
+
 
   getStream() {
 
@@ -176,21 +168,24 @@ class _NotesViewState extends State<NotesView> {
             ? BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 unselectedItemColor: AppTheme.color1,
-                onTap: (int value) {
+                onTap: (int value)async  {
                   if(value == 3){
                     Flash().show(context,2, 'Deleting', Colors.black54, 16, Colors.white, null);
-                    for(var i = 0;i<widget.selectedNotes.length;i++){
+                    var db= Firestore.instance;
+                    var batch = db.batch();
+                    widget.selectedNotes.map((value) {
+                          widget.selectedNotes.remove(value);
+                            batch.delete(Firestore.instance.collection('notes')
+                                .document(value));
 
-                      Firestore.instance.collection('notes')
-                          .document(widget.selectedNotes[i])
-                          .delete();
-                      print(widget.selectedNotes);
+                    }).toList();
 
-                      widget.selectedNotes.remove(widget.selectedNotes[i]);
-                    }
-                    setState(() {
-                      widget.selector = false;
+                    batch.commit().then((value) {
+                      setState(() {
+                        widget.selector = false;
+                      });
                     });
+
                   }
                 },
                 items: [
