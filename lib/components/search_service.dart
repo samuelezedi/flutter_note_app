@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class SearchService {
   static searchByName(String searchField) {
     return Firestore.instance.collection('notes')
-        .where('userId', isEqualTo: searchField.substring(0, 1).toUpperCase())
+        .where('userId', isEqualTo: searchField)
         .getDocuments();
   }
 

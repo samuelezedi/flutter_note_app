@@ -5,6 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:notably/components/page_transition.dart';
 import 'package:notably/screens/create.dart';
+import 'package:notably/screens/search.dart';
 import 'package:notably/utils/theme.dart';
 import 'package:notably/utils/toast.dart';
 import 'package:notably/widgets/dialogs.dart';
@@ -252,6 +253,15 @@ class _NotesViewState extends State<NotesView> {
                                   ? []
                                   : <Widget>[
                                       IconButton(
+                                        onPressed: (){
+                                          Navigator.push(context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return SearchNotes(widget.user);
+                                              }
+                                            )
+                                          );
+                                        },
                                         icon: Icon(
                                           Icons.search,
                                           color: Colors.white,
@@ -467,6 +477,15 @@ class _NotesViewState extends State<NotesView> {
           Row(
             children: <Widget>[
               IconButton(
+                onPressed: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (context) {
+                            return SearchNotes(widget.user);
+                          }
+                      )
+                  );
+                },
                 icon: Icon(
                   Icons.search,
                   color: Colors.white,

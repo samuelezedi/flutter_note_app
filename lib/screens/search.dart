@@ -1,7 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:notably/components/page_transition.dart';
 import 'package:notably/components/search_service.dart';
+import 'package:notably/screens/create.dart';
+import 'package:notably/utils/theme.dart';
 
 class SearchNotes extends StatefulWidget {
   var user;
@@ -22,38 +25,47 @@ class _SearchNotesState extends State<SearchNotes> {
 
   initiateSearch(value) {
 
-    if(value.length == 0) {
-      setState(() {
-        queryResultSet = [];
-        tempSearchStore = [];
-        showSearching = false;
-      });
-    }
 //    var capitalisedValue = value.substring(0,1).toUpperCase() + value.substring(1);
-    if(queryResultSet.length == 0 && value.length == 1) {
-      SearchService.searchByName(widget.user).then((docs){
-        for(int i = 0; i <docs.documents.length; i++){
-          queryResultSet.add(docs.documents[i].data);
-        }
-      });
-    } else {
+
       tempSearchStore = [];
-      queryResultSet.forEach((element) {
-        if(element['title'].startsWith(value)) {
-          setState(() {
-            tempSearchStore.add(element);
-          });
-        }
-      });
-    }
+
+        queryResultSet.forEach((element) {
+
+          if (element.data['title'].startsWith(value.toString().toLowerCase()) ||
+              element.data['title'].startsWith(value.toString().toUpperCase())) {
+            setState(() {
+              tempSearchStore.add(element);
+            });
+          }
+        });
+
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      queryResultSet = [];
+      tempSearchStore = [];
+      showSearching = false;
+    });
+    SearchService.searchByName(widget.user).then((docs){
+      for(int i = 0; i <docs.documents.length; i++){
+        queryResultSet.add(docs.documents[i]);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-
-          margin: EdgeInsets.fromLTRB(10, 40, 10, 0),
+          decoration: BoxDecoration(
+            gradient: AppTheme.linearGradient
+          ),
+          padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
           width: double.infinity,
           child: CustomScrollView(
             slivers: <Widget>[
@@ -83,7 +95,6 @@ class _SearchNotesState extends State<SearchNotes> {
                           height: 50,
                           padding: EdgeInsets.all(10),
                           child: TextFormField(
-                            textCapitalization: TextCapitalization.characters,
                             onChanged: (input) {
                               initiateSearch(input);
                             },
@@ -175,13 +186,21 @@ class _SearchNotesState extends State<SearchNotes> {
   Widget buildCard (element) {
     return GestureDetector(
       onTap: () {
-
+        Navigator.push(context, PageTransition.scaleRoute(page: CreateNote(
+          widget.user,
+          element.documentID,
+          noteContent: element.data['content'],
+          noteTitle: element.data['title'],
+          created: element.data['timestamp'],
+          updated: element.data['updated'],
+        )));
       },
       child: Card(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5)
         ),
-        child: Padding(
+        child: Container(
+          height: 130,
           padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +208,7 @@ class _SearchNotesState extends State<SearchNotes> {
               Row(
                 children: <Widget>[
                   Text(
-                    element['title'],
+                    element.data['title'],
                     style: TextStyle(
                         fontWeight: FontWeight.bold
                     ),
@@ -199,10 +218,13 @@ class _SearchNotesState extends State<SearchNotes> {
               SizedBox(
                 height: 5,
               ),
-              Text(
-                element['content'],
-                style: TextStyle(
-                    fontSize: 18
+              Expanded(
+                child: Text(
+                  element.data['content'],
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                      fontSize: 18
+                  ),
                 ),
               ),
               SizedBox(
