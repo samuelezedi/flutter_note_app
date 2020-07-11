@@ -2,15 +2,9 @@
 
 A simple and efficient Note App
 
-## Getting Started
+[Click here link to download from playStore](https://play.google.com/store/apps/details?id=net.cubiclab.notably)
 
-This project is a starting point for a Flutter application.
+| Image 1 | Image 2 | Image 3 | Image 4 | Image 5 |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| <image width="200" src="https://raw.githubusercontent.com/samuelezedi/flutter_note_app/master/assets/images/n-1.png"> | <image width="200" src="https://raw.githubusercontent.com/samuelezedi/flutter_note_app/master/assets/images/n-2.png"> | <image width="200" src="https://raw.githubusercontent.com/samuelezedi/flutter_note_app/master/assets/images/n-3.png"> | <image width="200" src="https://raw.githubusercontent.com/samuelezedi/uree_url_shortener/master/assets/images/n-4.png"> | <image width="200" src="https://raw.githubusercontent.com/samuelezedi/uree_url_shortener/master/assets/images/n-5.png"> |
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
